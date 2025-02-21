@@ -9,12 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.// Add services to the container.
 
-var connection = builder.Configuration["MySqlConnection:MySqlConnectionString"];
+var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection));
 
-builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(
-    connection,
-    new MySqlServerVersion(new Version(8, 0, 29)))
-);
+//var connection = builder.Configuration["MySqlConnection:MySqlConnectionString"];
+
+//builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(
+//    connection,
+//    new MySqlServerVersion(new Version(8, 0, 29)))
+//);
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
